@@ -22,29 +22,36 @@ oasst_export_latin_cyrillic_rlhf:
         lang: "en"
         #top_k: 2
         #input_file_path: 2023-03-25_oasst_research_ready_synth_labels.jsonl.gz
-        input_file_path: 2023-04-08_ready_with_prompt_lottery_en.jsonl.gz
+        input_file_path: 2023-04-12_oasst_all.trees.jsonl.gz
+  sort_by_length: false
+  use_custom_sampler: false
+
+oa_df:
+  datasets:
+    - oasst_export:
+        lang: "en"
+        hf_dataset_name: toanbku/oa-df
   sort_by_length: false
   use_custom_sampler: false
 
 pythia_rlhf:
-  triton_host_rm: localhost:8002/andreaskoepf-oasst-rm-2-pythia-1.4b-10000
-  triton_host_sft: localhost:8005/andreaskoepf-oasst-sft-4-pythia-12b-epoch-3.5
+  triton_host_rm: localhost:8002/toanbku-oa-rm-2.1-pythia-1.4b-df
+  triton_host_sft: localhost:8005/toanbku/oa-pythia-12b-sft-df
   rank_config:
     is_reward_model: true
-    model_name: andreaskoepf/oasst-rm-2-pythia-1.4b-10000 # just for tokenizer...andreaskoepf/oasst-rm-1-pythia-1b
-    cache_dir: /mnt/data/Open-Assistant-RLHF/model/model_training/.cache
+    model_name: toanbku/oa-rm-2.1-pythia-1.4b-df # just for tokenizer...andreaskoepf/oasst-rm-1-pythia-1b
+    cache_dir: /home/ubuntu/OA/model/model_training/.cache
     pooling: last
     residual_dropout: 0.01
     use_flash_attention: false
-    dtype: fp16
-    batch_size: 8
+    dtype: float32
+    batch_size: 2
+    residual_dropout_lima: false
 
   sft_config:
     is_reward_model: false
-    model_name: andreaskoepf/oasst-sft-4-pythia-12b-epoch-3.5
-    # model_name: andreaskoepf/pythia-1.4b-gpt4all-pretrain
-    # model_name: OpenAssistant/llama_30b_sft-2_test
-    cache_dir: /mnt/data/Open-Assistant-RLHF/model/model_training/.cache
+    model_name: toanbku/oa-pythia-12b-sft-df
+    cache_dir: /home/ubuntu/OA/model/model_training/.cache
     quantization: false
     seq2seqmodel: false
     freeze_layer:
@@ -53,6 +60,8 @@ pythia_rlhf:
     use_flash_attention: false
     dtype: fp16
     batch_size: 1
+    peft_type: "lora"
+    residual_dropout_lima: false
 
 llama_rlhf:
   triton_host_rm: localhost:8002/OpenAssistant-oasst-rm-2-pythia-6.9b-epoch-1
@@ -78,6 +87,7 @@ llama_rlhf:
     residual_dropout: 0.0
     use_flash_attention: true
     dtype: fp16
+    peft_type: "lora"
 
 debug_rlhf:
   rank_model: pythia_reward_model/checkpoint-50

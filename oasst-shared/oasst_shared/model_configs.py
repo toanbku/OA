@@ -36,6 +36,16 @@ MODEL_CONFIGS = {
         max_input_length=1024,
         max_total_length=2048,
     ),
+    "vietcuna": ModelConfig(
+        model_id="vilm/vietcuna-3b",
+        max_input_length=1024,
+        max_total_length=2048,
+    ),
+    "vietcuna-7b": ModelConfig(
+        model_id="vilm/vietcuna-7b-alpha",
+        max_input_length=1024,
+        max_total_length=2048,
+    ),
     "OA_SFT_Pythia_12Bq": ModelConfig(
         model_id="OpenAssistant/oasst-sft-1-pythia-12b",
         max_input_length=1024,
